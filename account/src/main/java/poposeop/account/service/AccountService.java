@@ -1,9 +1,11 @@
 package poposeop.account.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import poposeop.account.dto.LoginRequest;
 import poposeop.account.dto.RegisterRequest;
 import poposeop.account.entity.AccountEntity;
 import poposeop.account.repository.AccountRepository;
@@ -30,5 +32,14 @@ public class AccountService {
         System.out.println(entity.getPassword().length());
 
         accountRepository.save(entity);
+    }
+
+    public Boolean login(LoginRequest request){
+        return accountRepository.findById(request.getUsername())
+                .map(accountEntity -> {
+                    boolean check = passwordEncoder.matches(request.getPassword(),accountEntity.getPassword());
+                    return check;
+                })
+                .orElse(false);
     }
 }
