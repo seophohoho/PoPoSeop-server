@@ -8,16 +8,20 @@ import org.springframework.stereotype.Service;
 import poposeop.account.dto.LoginRequest;
 import poposeop.account.dto.RegisterRequest;
 import poposeop.account.entity.AccountEntity;
+import poposeop.account.entity.InGameEntity;
 import poposeop.account.repository.AccountRepository;
+import poposeop.account.repository.InGameRepository;
 
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final InGameRepository inGameRepository;
 
     private PasswordEncoder passwordEncoder;
 
-    public AccountService(AccountRepository accountRepository,PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepository accountRepository,InGameRepository inGameRepository,PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.inGameRepository = inGameRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -41,5 +45,9 @@ public class AccountService {
                     return check;
                 })
                 .orElse(false);
+    }
+
+    public InGameEntity getAccountByUsername(String username) {
+        return inGameRepository.findByUsername(username);
     }
 }
